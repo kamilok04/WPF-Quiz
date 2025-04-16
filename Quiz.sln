@@ -3,16 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rozwiazywarka", "Quiz\Rozwiazywarka.csproj", "{CA6FAD08-ED8F-4C27-BC41-8D5BA4F04FE2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		GeneratorQuiz\Model\Answer.cs = GeneratorQuiz\Model\Answer.cs
-		GeneratorQuiz\Model\Question.cs = GeneratorQuiz\Model\Question.cs
-		GeneratorQuiz\Model\Quiz.cs = GeneratorQuiz\Model\Quiz.cs
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rozwiazywarka", "Rozwiazywarka\Rozwiazywarka.csproj", "{CA6FAD08-ED8F-4C27-BC41-8D5BA4F04FE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorQuiz", "GeneratorQuiz\GeneratorQuiz.csproj", "{161FEF55-C16B-404D-6C08-EAA897EEA4E6}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "QuizModel", "QuizModel\QuizModel.shproj", "{ED864914-224D-46AA-9251-4F8F398C8E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,5 +29,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A023C691-70C9-4610-9EB2-45D21355BE7D}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		QuizModel\QuizModel.projitems*{161fef55-c16b-404d-6c08-eaa897eea4e6}*SharedItemsImports = 5
+		QuizModel\QuizModel.projitems*{ca6fad08-ed8f-4c27-bc41-8d5ba4f04fe2}*SharedItemsImports = 5
+		QuizModel\QuizModel.projitems*{ed864914-224d-46aa-9251-4f8f398c8e13}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

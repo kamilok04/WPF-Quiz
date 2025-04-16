@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Rozwiazywarka.View.TitleScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Rozwiazywarka.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Label Margin="20" DockPanel.Dock="Top" FontFamily="Comic Sans MS" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="48">Rozwiązywarka do Quizu</Label>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label >Wybrany plik:</Label>
+            <Label Content="{Binding Path=CurrentQuiz}"></Label>
+        </StackPanel>
+        <UniformGrid DockPanel.Dock="Top" Columns="2" Rows="1">
+            <Button>Wczytaj plik...</Button>
+            <Button>Start</Button>
+        </UniformGrid>
+
+    </DockPanel>
+</UserControl>
