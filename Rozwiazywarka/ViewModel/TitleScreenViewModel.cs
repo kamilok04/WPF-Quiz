@@ -1,8 +1,11 @@
 ﻿using Quiz.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -12,28 +15,51 @@ namespace Rozwiazywarka.ViewModel
     {
         #region Fields
 
-        private int _productId;
-        private FileModel _currentQuiz;
-        private ICommand _setQuizFile;
-        private ICommand _startQuizCommand;
+        private FileModel _currentFile = new("","Pliki (*.json)|*.json");
+        private ICommand? _setQuizFile;
+        private ICommand? _loadQuizCommand;
+        private Quiz.Model.Quiz? _loadedQuiz;
+     
+
         string IPageViewModel.Name => "TitleScreen";
 
         #endregion
 
-        #region Public Properties/Commands
 
-        public FileModel CurrentQuiz
+
+        #region Public Properties/Commands
+       
+ 
+
+        public FileModel CurrentFile
         {
-            get { return _currentQuiz; }
+            get { return _currentFile; }
             set
             {
-                if (value != _currentQuiz)
+                if (value != _currentFile)
                 {
-                    _currentQuiz = value;
-                    OnPropertyChanged("CurrentQuiz");
+                    _currentFile = value;
+                    OnPropertyChanged(nameof(CurrentFile));
+                    
                 }
             }
         }
+
+       
+        public Quiz.Model.Quiz LoadedQuiz
+        {
+            get { return _loadedQuiz; }
+            set
+            {
+                if (value != _loadedQuiz)
+                {
+                    _loadedQuiz  = value;
+
+                    OnPropertyChanged(nameof(LoadedQuiz));
+                }
+            }
+        }
+
 
         public ICommand SetQuizFileCommand
         {
@@ -42,28 +68,28 @@ namespace Rozwiazywarka.ViewModel
                 if (_setQuizFile == null)
                 {
                     _setQuizFile = new RelayCommand(
-                        param => SetQuizFile(),
-                        param => (CurrentQuiz != null)
-                    );
+                        param => SetQuizFile()
+                        );
                 }
                 return _setQuizFile;
             }
         }
 
-        public ICommand StartQuizCommand
+        public ICommand LoadQuizCommand
         {
             get
             {
-                if (_startQuizCommand == null)
+                if (_loadQuizCommand == null)
                 {
-                    _startQuizCommand = new RelayCommand(
-                        param => StartQuiz(),
-                        param => (CurrentQuiz != null)
+                    _loadQuizCommand = new RelayCommand(
+                        param => LoadQuiz(),
+                        param => (CurrentFile != null && CurrentFile.FilePathString != "")
                     );
                 }
-                return _startQuizCommand;
+                return _loadQuizCommand;
             }
         }
+
 
 
         #endregion
@@ -73,22 +99,32 @@ namespace Rozwiazywarka.ViewModel
         private void SetQuizFile()
         {
             // Spytaj o plik 
-            FileModel fileSelectionModel = new FileModel();
-            fileSelectionModel.FilePathString = CurrentQuiz.FilePathString;
-            fileSelectionModel.FileFilter = CurrentQuiz.FileFilter;
             var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Filter = CurrentFile.FileFilter;
+            dialog.FileName = CurrentFile.FilePathString;
             bool? result = dialog.ShowDialog();
             if(result == true)
             {
-                CurrentQuiz.FilePathString = dialog.FileName;
+                CurrentFile.FilePathString = dialog.FileName;
+                
             }
         }
 
-        private void StartQuiz()
+        private void LoadQuiz()
         {
             // Spróbuj wczytać plik quizu
+            // TODO: szyfrowanie
+            
+            string jsonString = File.ReadAllText(CurrentFile.FilePathString);
 
+            Quiz.Model.Quiz? quiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
+            if (quiz != null)
+            {
+                LoadedQuiz = quiz;
+                
+            }
         }
+
 
         #endregion
     }

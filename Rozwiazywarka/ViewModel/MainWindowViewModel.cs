@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Rozwiazywarka.ViewModel
 {
-   public class MainWindowViewModel : ObservableObject, IPageViewModel
+    public class MainWindowViewModel : ObservableObject, IPageViewModel
     {
         #region Fields
 
@@ -16,19 +16,41 @@ namespace Rozwiazywarka.ViewModel
 
         private IPageViewModel _currentPageViewModel;
         private List<IPageViewModel> _pageViewModels;
+
         string IPageViewModel.Name => "MainWindow";
 
+
+
         #endregion
+        #region Constructors
 
         public MainWindowViewModel()
         {
             // Add available pages
-            PageViewModels.Add(new TitleScreenViewModel());
-
-            // Set starting page
-            CurrentPageViewModel = PageViewModels[0];
+            TitleScreenViewModel titleScreenViewModel = new();
+            titleScreenViewModel.PropertyChanged += TitleScreenViewModel_PropertyChanged;
+            ChangeViewModel(titleScreenViewModel);
         }
 
+        private void TitleScreenViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (sender == null) return;
+
+            switch (e.PropertyName)
+            {
+                case nameof(TitleScreenViewModel.LoadedQuiz):
+                    var titleScreenViewModel = (TitleScreenViewModel)sender;
+                    if (titleScreenViewModel.LoadedQuiz != null)
+                    {
+                        // Switch to AnswerViewModel when LoadedQuiz is set
+                        ChangeViewModel(new AnswerViewModel(titleScreenViewModel.LoadedQuiz));
+                    }
+                    break;
+            }
+        }
+
+
+        #endregion
         #region Properties / Commands
 
         public ICommand ChangePageCommand
@@ -46,6 +68,7 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
+
         public List<IPageViewModel> PageViewModels
         {
             get
@@ -56,6 +79,8 @@ namespace Rozwiazywarka.ViewModel
                 return _pageViewModels;
             }
         }
+
+
 
         public IPageViewModel CurrentPageViewModel
         {
@@ -73,6 +98,7 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
+
         #endregion
 
         #region Methods
@@ -85,6 +111,13 @@ namespace Rozwiazywarka.ViewModel
             CurrentPageViewModel = PageViewModels
                 .FirstOrDefault(vm => vm == viewModel);
         }
+
+        void OnQuizLoaded(Quiz.Model.Quiz quiz)
+        {
+            ChangeViewModel(new AnswerViewModel(quiz));
+
+        }
+
 
         #endregion
     }

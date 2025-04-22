@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rozwiazywarka.ViewModel
 {
     public interface IPageViewModel
     {
-        string Name { get; }
+       public string Name { get; }
+
     }
 }

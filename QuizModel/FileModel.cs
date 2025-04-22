@@ -9,11 +9,22 @@ namespace Quiz.Model
     {
         #region Fields
 
-        private string _filePathString = ".";
+        private string _filePathString = "piwo";
         private string _fileFilter = "All files (*.*)|*.*";
 
         #endregion // Fields
-
+        #region Constructors
+        public FileModel() { }
+        public FileModel(string filePathString)
+        {
+            _filePathString = filePathString;
+        }
+        public FileModel(string filePathString, string fileFilter)
+        {
+            _filePathString = filePathString;
+            _fileFilter = fileFilter;
+        }
+        #endregion
         #region Properties
 
         public string FilePathString
@@ -25,7 +36,7 @@ namespace Quiz.Model
                 if (value != _filePathString)
                 {
                     _filePathString = value;
-                    OnPropertyChanged("FilePath");
+                    OnPropertyChanged(nameof(FilePathString));
                 }
             }
         }
@@ -45,6 +56,6 @@ namespace Quiz.Model
 
         #endregion // Properties
 
-        
+
     }
 }

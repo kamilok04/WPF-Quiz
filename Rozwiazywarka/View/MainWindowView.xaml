@@ -13,11 +13,11 @@
             <views:TitleScreenView />
             <!-- This is a UserControl -->
         </DataTemplate>
-        <!--
-        <DataTemplate DataType="{x:Type local:ProductsViewModel}">
-            <local:ProductsView />
-            
-        </DataTemplate> -->
+
+        <DataTemplate DataType="{x:Type viewmodels:AnswerViewModel}">
+            <views:AnswerView />
+
+        </DataTemplate>
     </Window.Resources>
     <ContentControl Content="{Binding CurrentPageViewModel}"/>
 

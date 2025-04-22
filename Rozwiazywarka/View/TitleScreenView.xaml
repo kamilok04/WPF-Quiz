@@ -4,17 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Rozwiazywarka.View"
+             xmlns:viewmodel="clr-namespace:Rozwiazywarka.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+ 
+
     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <Label Margin="20" DockPanel.Dock="Top" FontFamily="Comic Sans MS" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="48">Rozwiązywarka do Quizu</Label>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Label >Wybrany plik:</Label>
-            <Label Content="{Binding Path=CurrentQuiz}"></Label>
+            <Label Name="FileName" Content="{Binding CurrentFile.FilePathString}"></Label>
         </StackPanel>
         <UniformGrid DockPanel.Dock="Top" Columns="2" Rows="1">
-            <Button>Wczytaj plik...</Button>
-            <Button>Start</Button>
+            <Button Command="{Binding SetQuizFileCommand}">Wybierz plik...</Button>
+            <Button Command="{Binding LoadQuizCommand}">Start</Button>
         </UniformGrid>
 
     </DockPanel>
