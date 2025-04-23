@@ -26,7 +26,7 @@ namespace Rozwiazywarka.ViewModel
 
         public MainWindowViewModel()
         {
-            // Add available pages
+     
             TitleScreenViewModel titleScreenViewModel = new();
             titleScreenViewModel.PropertyChanged += TitleScreenViewModel_PropertyChanged;
             ChangeViewModel(titleScreenViewModel);
@@ -112,11 +112,6 @@ namespace Rozwiazywarka.ViewModel
                 .FirstOrDefault(vm => vm == viewModel);
         }
 
-        void OnQuizLoaded(Quiz.Model.Quiz quiz)
-        {
-            ChangeViewModel(new AnswerViewModel(quiz));
-
-        }
 
 
         #endregion

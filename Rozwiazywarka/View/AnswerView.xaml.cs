@@ -24,5 +24,7 @@ namespace Rozwiazywarka.View
         {
             InitializeComponent();
         }
+
+
     }
 }

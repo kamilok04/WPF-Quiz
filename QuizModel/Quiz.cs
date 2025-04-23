@@ -11,7 +11,7 @@ namespace Quiz.Model
     {
         public string Name { get; set; }
 
-        public ObservableCollection<Question> Questions { get; set; }
+        private ObservableCollection<Question> _questions { get; set; }
 
         public Quiz()
         {
@@ -24,5 +24,13 @@ namespace Quiz.Model
             Name = name;
             Questions = questions;
         }
+
+        public ObservableCollection<Question> Questions
+        {
+            get { return _questions; }
+            set { _questions = value; }
+        }
+        
+
     }
 }

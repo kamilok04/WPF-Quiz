@@ -23,5 +23,7 @@ namespace Quiz.Model
             Text = text;
             Answers = answers;
         }
+
+        public static explicit operator string(Question q) => q.Text;
     }
 }

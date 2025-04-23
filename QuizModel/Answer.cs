@@ -22,5 +22,12 @@ namespace Quiz.Model
             Text = text;
             IsCorrect = isCorrect;
         }
+
+        public override string ToString()
+        {
+            return Text;
+        }
+        public static explicit operator string(Answer answer) => answer.Text;
+
     }
 }
