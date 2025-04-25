@@ -17,6 +17,9 @@
         <DataTemplate DataType="{x:Type viewmodels:AnswerViewModel}">
             <views:AnswerView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:QuizSummaryViewModel}">
+            <views:QuizSummaryView />
+        </DataTemplate>
     </Window.Resources>
     <ContentControl Content="{Binding CurrentPageViewModel}"/>
 

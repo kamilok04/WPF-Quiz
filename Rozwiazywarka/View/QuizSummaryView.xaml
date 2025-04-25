@@ -5,8 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Rozwiazywarka.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:viewmodels="clr-namespace:Rozwiazywarka.ViewModel">
+    <!--<UserControl.DataContext>
+        <viewmodels:QuizSummaryViewModel/>
+    </UserControl.DataContext>-->
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="13*"/>
+        </Grid.RowDefinitions>
+        <Label Content="{Binding QuizStatus.Name, FallbackValue='Tytuł'}" ContentStringFormat='{}QUIZ "{0}"'></Label>
+        <Label Grid.Row="1" Content="{Binding TimeElapsedFormatted,FallbackValue='00:00:00'}" ContentStringFormat="{}Czas spędzony nad quizem: {0}"/>
+        <TextBlock Grid.Row="2">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}Wynik: {0} / {1} możliwych">
+                    <Binding Path="Score" FallbackValue="0"></Binding>
+                    <Binding Path="QuizStatus.MaxScore" FallbackValue="1"></Binding>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <DockPanel Grid.Row="3">
+            <Label DockPanel.Dock="Top">Przegląd quizu:</Label>
+            <Grid DockPanel.Dock="Top" Name="QuizOverview">
+                <ContentPresenter Content="{Binding AnswerViewModel}"/>
+            </Grid>
+
+        </DockPanel>
     </Grid>
 </UserControl>

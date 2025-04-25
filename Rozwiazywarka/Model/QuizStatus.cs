@@ -6,9 +6,11 @@ namespace Rozwiazywarka.Model
 {
     public class QuizStatus
     {
-        private readonly Quiz.Model.Quiz quiz;
+        private readonly Quiz.Model.Quiz _quiz;
         private readonly string _name;
         private readonly int _totalQuestions;
+        private int _totalTimeElapsed;
+        private readonly int _maxScore;
 
 
         private ObservableCollection<QuestionSelection> _questions;
@@ -25,15 +27,21 @@ namespace Rozwiazywarka.Model
             Name = quiz.Name;
             Questions = [.. quiz.Questions.Select<Question, QuestionSelection>(a => new(a, quiz.Questions.IndexOf(a)))];
             TotalQuestions = Questions.Count;
+            MaxScore = TotalQuestions;
             ConfirmedAnswers = new(TotalQuestions);
+
            
-            this.quiz = quiz;
+            Quiz = quiz;
 
 
         }
 
 
-
+        public Quiz.Model.Quiz Quiz
+        {
+            get { return _quiz; }
+            init { _quiz = value; }
+        }
         public string Name { get { return _name; } init { _name = value; } }
         public int TotalQuestions { get { return _totalQuestions; } init { _totalQuestions = value; } }
 
@@ -42,6 +50,17 @@ namespace Rozwiazywarka.Model
         {
             get { return _questions; }
             init { _questions =  value; }
+        }
+        public int MaxScore
+        {
+            get { return _maxScore; }
+            init { _maxScore = value; }
+        }
+
+        public int TotalTimeElapsed
+        {
+            get { return _totalTimeElapsed; } 
+            set {  _totalTimeElapsed = value; }
         }
 
 

@@ -1,24 +1,9 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup.Localizer;
-using System.Windows.Threading;
+
 using Quiz.Model;
 using Rozwiazywarka.Model;
 
@@ -234,6 +219,7 @@ namespace Rozwiazywarka.ViewModel
         }
 
         private void OnStopQuiz() {
+            ProcessAnswers(CurrentQuestionIndex);
             MessageBoxResult result;
             if (QuizStatus.QuestionsAnswered == QuizStatus.TotalQuestions)
             {
@@ -253,7 +239,11 @@ namespace Rozwiazywarka.ViewModel
             }
 
             if (result == MessageBoxResult.Yes)
+            {
+                QuizStatus.TotalTimeElapsed = _timeElapsed;
                 QuizInProgress = false;
+            }
+
                 
         }
 

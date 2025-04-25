@@ -130,7 +130,7 @@ namespace Rozwiazywarka.ViewModel
                     if (answerViewModel.QuizInProgress == false)
                     {
                         // Koniec quizu, zmień na widok podsumowania
-                        QuizSummaryViewModel summary = new();
+                        QuizSummaryViewModel summary = new(answerViewModel.QuizStatus);
                         ChangeViewModel(summary);
                     }
                     break;
