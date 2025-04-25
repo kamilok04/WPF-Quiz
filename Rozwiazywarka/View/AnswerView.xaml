@@ -8,127 +8,227 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        
+
+        <viewmodel:AnswerStyleConverter x:Key="AnswerStyleConverter"/>
         <viewmodel:AnswerConverter x:Key="AnswerConverter"/>
-        <Style TargetType="ToggleButton" x:Key="UnselectedAnswer">
+        <viewmodel:GetIndexMultiConverter x:Key="IndexConverter"/>
+        <Style TargetType="{x:Type Button}" x:Key="AnswerStyle">
             <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Background" Value="Red"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
+                    <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Background" Value="Green"/>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="False">
-                    <Setter Property="Background" Value="Red"/>
-                </Trigger>
+                <!-- Background changes based on selected/answered property -->
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <PriorityBinding>
+                            <Binding Path="IsSelected"/>
+                            <Binding Path="IsAnswered"/>
+                        </PriorityBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="#3F008000"/>
+                </DataTrigger>
+                <DataTrigger Value="False">
+                    <DataTrigger.Binding>
+                        <PriorityBinding>
+                            <Binding Path="IsSelected"/>
+                            <Binding Path="IsAnswered"/>
+                        </PriorityBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="#3FFF0000"/>
+                </DataTrigger>
+
+                <!-- Hover effect when IsSelected is True -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Value="True">
+                            <Condition.Binding>
+                                <PriorityBinding>
+                                <Binding Path="IsSelected"/>
+                                <Binding Path="IsAnswered"/>
+                                </PriorityBinding>
+                            </Condition.Binding>
+                        </Condition>
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="#5F00FF00"/>
+                </MultiDataTrigger>
+
+                <!-- Hover effect when IsSelected is False -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Value="False">
+                            <Condition.Binding>
+                                <PriorityBinding>
+                                    <Binding Path="IsSelected"/>
+                                    <Binding Path="IsAnswered"/>
+                                </PriorityBinding>
+                            </Condition.Binding>
+                        </Condition>
+                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=Self}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="#5FFF0000"/>
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
-        
+
+    <Style TargetType="{x:Type Grid}" x:Key="OverlayStyle">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding QuizInProgress}" Value="True">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
     </UserControl.Resources>
+
     <!--<UserControl.DataContext>
         <viewmodel:AnswerViewModel></viewmodel:AnswerViewModel>
     </UserControl.DataContext>-->
-   
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-  
-           
-            <Grid>
+        <Grid Name="Overlay" Grid.ColumnSpan="2" Panel.ZIndex="2" d:IsHidden="True" Style="{StaticResource OverlayStyle}">
+            <Grid.Background>
+                <SolidColorBrush Color="WhiteSmoke" Opacity="0.5"/>
+            </Grid.Background>
+            <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label  DockPanel.Dock="Top" FontFamily="Comic Sans MS" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="24">Naciśnij przycisk, aby rozpocząć quiz.</Label>
+                <Label DockPanel.Dock="Top" FontFamily="Comic Sans MS" HorizontalAlignment="Center" VerticalAlignment="Stretch" FontSize="18" FontWeight="Bold">Rozpoczęcie quizu uruchomi zegar.</Label>
+                <Button DockPanel.Dock="Top" Padding="2" Command="{Binding StartQuiz}">Rozpocznij quiz :)</Button>
+            </DockPanel>
+        </Grid>
+        <Grid x:Name="MainGrid">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding QuizInProgress}" Value="False">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect Radius="12" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="NavigationGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="1*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
-                <Button>Wyjście</Button>
-                <Label Grid.Row="1">
-                    Wybór pytania
-                </Label>
-                <UniformGrid Name="SelectionGrid" Grid.Row="2">
+
+
+                <Button Content="Wyjście" Command="{Binding StopQuiz}"/>
+                <Label Grid.Row="1" Content="Wybór pytania"/>
+                <UniformGrid x:Name="SelectionGrid" Grid.Row="2">
                     <ItemsControl ItemsSource="{Binding QuizStatus.Questions}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid Columns="4" Rows="4"/>
+                                <UniformGrid Columns="6" Rows="8"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button>A</Button>
+                                <Button Command="{Binding Path=DataContext.SelectQuestion, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        CommandParameter="{Binding Index}"
+                                        Style="{StaticResource AnswerStyle}">
+                                    <Button.Content>
+                                        <MultiBinding Converter="{StaticResource IndexConverter}">
+                                            <Binding/>
+                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                                        </MultiBinding>
+                                    </Button.Content>
+                                </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </UniformGrid>
             </Grid>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="10*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <DockPanel>
-                <Label>Upłynęło:</Label>
-                <Label Content="{Binding TimeString, Mode=OneWay}"></Label>
-            </DockPanel>
-            <Grid VerticalAlignment="Stretch" Grid.Row="1">
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*"></ColumnDefinition>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" Name="GameGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="4*"></RowDefinition>
-                    <RowDefinition Height="4*"></RowDefinition>
-                   
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.ColumnSpan="2" Content="{Binding QuizStatus.CurrentQuestion.Text}"></Label>
-                <ItemsControl Name="AnswerList" ItemsSource="{Binding QuizStatus.CurrentAnswers}" Grid.Row="1">
-                    
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="1"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="AliceBlue" BorderThickness="2" CornerRadius="5">
-                                <ToggleButton Command="{Binding DataContext.SelectAnswer, RelativeSource={RelativeSource AncestorType=UserControl}}"  
-                                       CommandParameter="{Binding ElementName=AnswerKey, Path=Content}" Checked="{Binding Answers}"
-                                        Style="{StaticResource UnselectedAnswer}">  
-                                  <DockPanel Name="AnswerChoice">
-                               
-                                        <Label Name="AnswerKey">  
-                                          <Label.Content>  
-                                              <MultiBinding Converter="{StaticResource AnswerConverter}">  
-                                                  <Binding Path="."/>  
-                                                  <Binding ElementName="AnswerList" Path="ItemsSource"></Binding>  
-                                              </MultiBinding>  
-                                          </Label.Content>  
-                                      </Label>  
-                                      <Label Content="{Binding Text}"></Label>  
-                                  </DockPanel>  
-                                </ToggleButton>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <DockPanel>
+                    <Label Content="Upłynęło:"/>
+                    <Label Content="{Binding TimeString, Mode=OneWay}"/>
+                </DockPanel>
+                <Grid x:Name="AnswerGrid" VerticalAlignment="Stretch" Grid.Row="1">
 
-                <Button Grid.Column="1" Grid.Row="1"  Command="{Binding ConfirmAnswer}">
-                    Dalej >
-                </Button>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="1*"/>
+
+                    </Grid.RowDefinitions>
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Padding="4"> 
+                        <TextBlock FontSize="20" FontFamily="Comic Sans MS" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="{Binding CurrentQuestion.Question.Text, FallbackValue='Pytanie?'}" TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                    <ItemsControl x:Name="AnswerList" ItemsSource="{Binding CurrentAnswers}" Grid.Row="1">
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="1"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding DataContext.SelectAnswer, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"  
+                                       CommandParameter="{Binding}" Style="{StaticResource AnswerStyle}" HorizontalContentAlignment="Stretch">
+                                   
+                                 
+                                            
+                                            <Grid x:Name="AnswerChoice">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="10*"/>
+                                                </Grid.ColumnDefinitions>
+                                              
+                                                <Label x:Name="AnswerKey">
+                                                    <MultiBinding Converter="{StaticResource AnswerConverter}">
+                                                        <Binding Path="."/>
+                                                        <Binding ElementName="AnswerList" Path="ItemsSource"/>
+                                                    </MultiBinding>
+                                                </Label>
+                                                <Label Grid.Column="1" Content="{Binding Answer.Text}"/>
+                                            </Grid>
+                                       
+                                   
+                                    
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="1"  Content="Zapisz i dalej &gt;"/>
+                    <Button Grid.Column="1" Grid.Row="2" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="0" Content="Zapisz;"/>
+                    <DockPanel Grid.Row="2">
+                        <Label Content="Pytanie"/>
+                        <Label Content="{Binding CurrentQuestionIndexFormatted}"/>
+                        <Label Content="z"/>
+                        <Label Content="{Binding QuizStatus.TotalQuestions}"/>
+                    </DockPanel>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

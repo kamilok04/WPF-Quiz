@@ -32,22 +32,8 @@ namespace Rozwiazywarka.ViewModel
             ChangeViewModel(titleScreenViewModel);
         }
 
-        private void TitleScreenViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (sender == null) return;
 
-            switch (e.PropertyName)
-            {
-                case nameof(TitleScreenViewModel.LoadedQuiz):
-                    var titleScreenViewModel = (TitleScreenViewModel)sender;
-                    if (titleScreenViewModel.LoadedQuiz != null)
-                    {
-                        // Switch to AnswerViewModel when LoadedQuiz is set
-                        ChangeViewModel(new AnswerViewModel(titleScreenViewModel.LoadedQuiz));
-                    }
-                    break;
-            }
-        }
+        
 
 
         #endregion
@@ -112,6 +98,46 @@ namespace Rozwiazywarka.ViewModel
                 .FirstOrDefault(vm => vm == viewModel);
         }
 
+        private void TitleScreenViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (sender == null) return;
+
+            switch (e.PropertyName)
+            {
+                case nameof(TitleScreenViewModel.LoadedQuiz):
+                    var titleScreenViewModel = (TitleScreenViewModel)sender;
+                    if (titleScreenViewModel.LoadedQuiz != null)
+                    {
+                        // Switch to AnswerViewModel when LoadedQuiz is set
+                        AnswerViewModel answerViewModel = new(titleScreenViewModel.LoadedQuiz);
+                        answerViewModel.PropertyChanged += AnswerViewModel_PropertyChanged;
+                        ChangeViewModel(answerViewModel);
+                    }
+                    break;
+
+
+            }
+        }
+
+        private void AnswerViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (sender == null) return;
+
+            switch (e.PropertyName)
+            {
+                case nameof(AnswerViewModel.QuizInProgress):
+                    var answerViewModel = (AnswerViewModel)sender;
+                    if (answerViewModel.QuizInProgress == false)
+                    {
+                        // Koniec quizu, zmień na widok podsumowania
+                        QuizSummaryViewModel summary = new();
+                        ChangeViewModel(summary);
+                    }
+                    break;
+
+
+            }
+        }
 
 
         #endregion
