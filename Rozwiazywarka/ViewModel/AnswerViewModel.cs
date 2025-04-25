@@ -223,8 +223,11 @@ namespace Rozwiazywarka.ViewModel
         {
             if (param is not string) return;
             if (!int.TryParse((string)param, out int offset)) return;
-            CurrentQuestion.IsAnswered = true;
-            QuizStatus.QuestionsAnswered += 1;
+            if (!CurrentQuestion.IsAnswered)
+            {
+                CurrentQuestion.IsAnswered = true;
+                QuizStatus.QuestionsAnswered += 1;
+            }
             ProcessAnswers(CurrentQuestionIndex);
             if (CurrentQuestionIndex + offset >= QuizStatus.TotalQuestions) OnStopQuiz();
             else CurrentQuestionIndex += offset;
@@ -259,8 +262,11 @@ namespace Rozwiazywarka.ViewModel
             if (param is not AnswerSelection) return;
             var answer = (AnswerSelection)param;
             answer.IsSelected = !answer.IsSelected;
-            CurrentQuestion.IsAnswered = true;
-            QuizStatus.QuestionsAnswered += 1;
+            if (!CurrentQuestion.IsAnswered)
+            {
+                CurrentQuestion.IsAnswered = true;
+                QuizStatus.QuestionsAnswered += 1;
+            }
             
         }
         private void OnSelectQuestion(object param)
