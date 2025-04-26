@@ -13,7 +13,7 @@ namespace Rozwiazywarka.ViewModel
 {
     public class IndexableProperty<T>
     {
-        private T[] _values;
+        private readonly T[] _values;
         public readonly int Length;
 
         public static implicit operator T[](IndexableProperty<T> t) => t.Values;

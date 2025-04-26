@@ -43,12 +43,9 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                if (_changePageCommand == null)
-                {
-                    _changePageCommand = new RelayCommand(
+                _changePageCommand ??= new RelayCommand(
                         p => ChangeViewModel((IPageViewModel)p),
                         p => p is IPageViewModel);
-                }
 
                 return _changePageCommand;
             }
@@ -57,13 +54,8 @@ namespace Rozwiazywarka.ViewModel
 
         public List<IPageViewModel> PageViewModels
         {
-            get
-            {
-                if (_pageViewModels == null)
-                    _pageViewModels = new List<IPageViewModel>();
-
-                return _pageViewModels;
-            }
+            get => _pageViewModels ??= [];
+   
         }
 
 
@@ -79,7 +71,7 @@ namespace Rozwiazywarka.ViewModel
                 if (_currentPageViewModel != value)
                 {
                     _currentPageViewModel = value;
-                    OnPropertyChanged("CurrentPageViewModel");
+                    OnPropertyChanged(nameof(CurrentPageViewModel));
                 }
             }
         }

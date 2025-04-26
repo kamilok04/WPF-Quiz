@@ -75,7 +75,7 @@ namespace Rozwiazywarka.ViewModel
             int score = 0;
             for(int i = 0; i < QuizStatus.TotalQuestions; i++)
             {
-                List<bool> correctAnswers = new();
+                List<bool> correctAnswers = [];
                 foreach (Answer answer in QuizStatus.Quiz.Questions[i].Answers)
                 {
                     correctAnswers.Add(answer.IsCorrect);
@@ -93,15 +93,14 @@ namespace Rozwiazywarka.ViewModel
             QuizStatus retrospective = new(QuizStatus.Quiz);
             for (int i = 0; i < QuizStatus.TotalQuestions; i++)
             {
-                List<bool> correctAnswers = new();
+                List<bool> correctAnswers = [];
                 foreach (Answer answer in QuizStatus.Quiz.Questions[i].Answers)
                 {
                     correctAnswers.Add(answer.IsCorrect);
                 }
 
                 List<bool> selectedAnswers = QuizStatus.ConfirmedAnswers[i];
-                if (selectedAnswers is null)
-                    selectedAnswers = Enumerable.Repeat(false, correctAnswers.Count).ToList();
+                selectedAnswers ??= [.. Enumerable.Repeat(false, correctAnswers.Count)];
 
                 bool questionCorrect = true;
                 retrospective.ConfirmedAnswers[i] = selectedAnswers;

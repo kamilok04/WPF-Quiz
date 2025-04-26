@@ -9,6 +9,7 @@
     <Import_RootNamespace>Quiz.Model</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AESHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Answer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObservableObject.cs" />

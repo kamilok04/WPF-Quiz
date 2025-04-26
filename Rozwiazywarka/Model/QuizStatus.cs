@@ -6,19 +6,19 @@ namespace Rozwiazywarka.Model
 {
     public class QuizStatus
     {
-        private readonly Quiz.Model.Quiz _quiz;
-        private readonly string _name;
+        private readonly Quiz.Model.Quiz? _quiz;
+        private readonly string? _name;
         private readonly int _totalQuestions;
         private int _totalTimeElapsed;
         private readonly int _maxScore;
 
 
-        private ObservableCollection<QuestionSelection> _questions;
+        private ObservableCollection<QuestionSelection>? _questions;
         private int _questionsAnswered = 0;
-        private IndexableProperty<List<bool>> _confirmedAnswers;
+        private IndexableProperty<List<bool>>? _confirmedAnswers;
 
 
-        public QuizStatus()
+        private QuizStatus()
         {
 
         }

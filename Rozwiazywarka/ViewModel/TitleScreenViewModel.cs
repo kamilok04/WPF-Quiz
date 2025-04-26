@@ -18,6 +18,7 @@ namespace Rozwiazywarka.ViewModel
         private FileModel _currentFile = new("","Pliki (*.json)|*.json");
         private ICommand? _setQuizFile;
         private ICommand? _loadQuizCommand;
+        private ICommand? _pasteEncrytionKeyCommand;
         private Quiz.Model.Quiz? _loadedQuiz;
      
 
@@ -75,6 +76,20 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
+        public ICommand PasteEncryptionKeyCommand
+        {
+            get
+            {
+                _pasteEncrytionKeyCommand ??= new RelayCommand(
+                    param => PasteEncryptionKey()
+                    );
+                return _pasteEncrytionKeyCommand;
+            }
+
+            
+                   
+            
+        }
         public ICommand LoadQuizCommand
         {
             get
@@ -125,6 +140,10 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
+        private void PasteEncryptionKey()
+        {
+            // TODO
+        }
 
         #endregion
     }

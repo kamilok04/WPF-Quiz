@@ -111,13 +111,10 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                if (_startQuiz == null)
-                {
-                    _startQuiz = new RelayCommand(
+                _startQuiz ??= new RelayCommand(
                         param => InitializeQuiz(),
                         param => !QuizInProgress
                         );
-                }
                 return _startQuiz;
             }
         }
@@ -125,12 +122,9 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                if (_selectQuestion == null)
-                {
-                    _selectQuestion = new RelayCommand(
+                _selectQuestion ??= new RelayCommand(
                         param => OnSelectQuestion(param)
                         );
-                }
                 return _selectQuestion;
             }
         }
@@ -140,13 +134,10 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                if (_confirmAnswer == null)
-                {
-                    _confirmAnswer = new RelayCommand(
+                _confirmAnswer ??= new RelayCommand(
                         param => OnConfirmAnswer(param),
                         param => QuizInProgress
                         );
-                }
                 return _confirmAnswer;
             }
         }
@@ -155,14 +146,11 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                if (_selectAnswer == null)
-                {
-                    _selectAnswer = new RelayCommand(
+                _selectAnswer ??= new RelayCommand(
                         param => OnSelectAnswer(param),
                         param => QuizInProgress
 
                         );
-                }
                 return _selectAnswer;
             }
         }
@@ -171,13 +159,10 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                if (_stopQuiz == null)
-                {
-                    _stopQuiz = new RelayCommand(
+                _stopQuiz ??= new RelayCommand(
                         param => OnStopQuiz(),
                         param => QuizInProgress
                         );
-                }
                 return _stopQuiz ;
             }
         }
@@ -236,19 +221,19 @@ namespace Rozwiazywarka.ViewModel
 
         private void OnStopQuiz() {
             ProcessAnswers(CurrentQuestionIndex);
-            MessageBoxResult result;
+            MessageBoxResult? result;
             if (QuizStatus.QuestionsAnswered == QuizStatus.TotalQuestions)
             {
-                string text = "To zakończy quiz. Na pewno kontynuować?";
-                string title = "Koniec quizu";
+                string? text = "To zakończy quiz. Na pewno kontynuować?";
+                string? title = "Koniec quizu";
                 MessageBoxButton button = MessageBoxButton.YesNo;
                 MessageBoxImage image = MessageBoxImage.Question;
                 result = MessageBox.Show(text, title, button, image, MessageBoxResult.No);
             }
             else
             {
-                string text = "To zakończy quiz, a nie udzielono odpowiedzi na wszystkie pytania. Na pewno kontynuować?";
-                string title = "Koniec quizu";
+                string? text = "To zakończy quiz, a nie udzielono odpowiedzi na wszystkie pytania. Na pewno kontynuować?";
+                string? title = "Koniec quizu";
                 MessageBoxButton button = MessageBoxButton.YesNo;
                 MessageBoxImage image = MessageBoxImage.Warning;
                 result = MessageBox.Show(text, title, button, image, MessageBoxResult.No);
@@ -287,7 +272,7 @@ namespace Rozwiazywarka.ViewModel
         {
             
  
-            List<bool> selectedAnswers = new();
+            List<bool>? selectedAnswers = [];
             foreach (AnswerSelection answer in CurrentAnswers)
             {
                 selectedAnswers.Add(answer.IsSelected);
@@ -311,7 +296,7 @@ namespace Rozwiazywarka.ViewModel
             CurrentQuestion = QuizStatus.Questions[CurrentQuestionIndex];
             if (CurrentAnswers != null)
                 CurrentAnswers.Clear();
-            else CurrentAnswers = new();
+            else CurrentAnswers = [];
             for (int i = 0; i < CurrentQuestion.Question.Answers.Count; i++)
             {
                 List<bool>? answered = QuizStatus.ConfirmedAnswers[CurrentQuestionIndex];
