@@ -6,12 +6,16 @@
              xmlns:local="clr-namespace:Rozwiazywarka.View"    
              xmlns:viewmodel="clr-namespace:Rozwiazywarka.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="768" d:DesignWidth="1024">
     <UserControl.Resources>
 
         <viewmodel:AnswerStyleConverter x:Key="AnswerStyleConverter"/>
         <viewmodel:AnswerConverter x:Key="AnswerConverter"/>
         <viewmodel:GetIndexMultiConverter x:Key="IndexConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"   />
+        
+
+
         <Style TargetType="{x:Type Button}" x:Key="AnswerStyle">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -83,10 +87,17 @@
 
     <Style TargetType="{x:Type Grid}" x:Key="OverlayStyle">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding QuizInProgress}" Value="True">
-                <Setter Property="Visibility" Value="Hidden"/>
-            </DataTrigger>
-        </Style.Triggers>
+               
+           <DataTrigger Binding="{Binding QuizInProgress}" Value="True">
+                   <Setter Property="Visibility" Value="Hidden"/>
+               
+               </DataTrigger>
+                <DataTrigger Binding="{Binding EnableAnswering}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+
+            </Style.Triggers>
+        
     </Style>
     </UserControl.Resources>
 
@@ -94,8 +105,9 @@
         <viewmodel:AnswerViewModel></viewmodel:AnswerViewModel>
     </UserControl.DataContext>-->
 
-    <Grid>
-        <Grid Name="Overlay" Grid.ColumnSpan="2" Panel.ZIndex="2" d:IsHidden="True" Style="{StaticResource OverlayStyle}">
+    <Grid >
+        <Grid Name="Overlay" Grid.ColumnSpan="2" Panel.ZIndex="2" d:IsHidden="True" Style="{StaticResource OverlayStyle}"
+>
             <Grid.Background>
                 <SolidColorBrush Color="WhiteSmoke" Opacity="0.5"/>
             </Grid.Background>
@@ -109,13 +121,18 @@
             <Grid.Style>
                 <Style TargetType="{x:Type Grid}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding QuizInProgress}" Value="False">
-                            <Setter Property="Effect">
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding EnableAnswering}" Value="True"/>
+                                <Condition Binding="{Binding QuizInProgress}" Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                     
+                        <Setter Property="Effect">
                                 <Setter.Value>
                                     <BlurEffect Radius="12" />
                                 </Setter.Value>
                             </Setter>
-                        </DataTrigger>
+                        </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
@@ -132,7 +149,7 @@
                 </Grid.RowDefinitions>
 
 
-                <Button Content="Wyjście" Command="{Binding StopQuiz}"/>
+                <Button Content="Wyjście" Command="{Binding StopQuiz}" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}"/>
                 <Label Grid.Row="1" Content="Wybór pytania"/>
                 <UniformGrid x:Name="SelectionGrid" Grid.Row="2">
                     <ItemsControl ItemsSource="{Binding QuizStatus.Questions}">
@@ -146,6 +163,7 @@
                                 <Button Command="{Binding Path=DataContext.SelectQuestion, 
                                     RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                         CommandParameter="{Binding Index}"
+                                        
                                         Style="{StaticResource AnswerStyle}">
                                     <Button.Content>
                                         <MultiBinding Converter="{StaticResource IndexConverter}">
@@ -165,10 +183,7 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="10*"/>
                 </Grid.RowDefinitions>
-                <DockPanel>
-                    <Label Content="Upłynęło:"/>
-                    <Label Content="{Binding TimeString, Mode=OneWay}"/>
-                </DockPanel>
+                <Label Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility},FallbackValue=Visible}" Content="{Binding TimeString}" ContentStringFormat="{}Upłynęło: {0}"/>
                 <Grid x:Name="AnswerGrid" VerticalAlignment="Stretch" Grid.Row="1">
 
                     <Grid.ColumnDefinitions>
@@ -220,14 +235,16 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Button Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="1"  Content="Zapisz i dalej &gt;"/>
-                    <Button Grid.Column="1" Grid.Row="2" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="0" Content="Zapisz;"/>
-                    <DockPanel Grid.Row="2">
-                        <Label Content="Pytanie"/>
-                        <Label Content="{Binding CurrentQuestionIndexFormatted}"/>
-                        <Label Content="z"/>
-                        <Label Content="{Binding QuizStatus.TotalQuestions}"/>
-                    </DockPanel>
+                    <Button Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="1"  Content="Zapisz i dalej &gt;"/>
+                    <Button Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}" Grid.Column="1" Grid.Row="2" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="0" Content="Zapisz;"/>
+                    <TextBlock Grid.Row="3" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}Pytanie {0} z {1}">
+                                <Binding Path="CurrentQuestionIndexFormatted" FallbackValue="0"></Binding>
+                                <Binding Path="QuizStatus.TotalQuestions" FallbackValue="1"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </Grid>
             </Grid>
         </Grid>

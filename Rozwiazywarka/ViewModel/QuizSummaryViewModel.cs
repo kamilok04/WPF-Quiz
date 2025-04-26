@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Rozwiazywarka.ViewModel
 {
@@ -26,8 +27,9 @@ namespace Rozwiazywarka.ViewModel
             QuizStatus = status;
             Score = CountPoints();
             TimeElapsedFormatted = TimeSpan.FromSeconds(QuizStatus.TotalTimeElapsed).ToString(@"hh\:mm\:ss");
+            QuizStatus retrospective = CreateRetrospective();
+            AnswerViewModel = new(retrospective);
 
-            AnswerViewModel = new();
 
             /* TODO:
              * - pozbyć się zegara
@@ -84,6 +86,39 @@ namespace Rozwiazywarka.ViewModel
                 if (correctAnswers.SequenceEqual(selectedAnswers)) score++;
             }
             return score;
+        }
+
+        private QuizStatus CreateRetrospective()
+        {
+            QuizStatus retrospective = new(QuizStatus.Quiz);
+            for (int i = 0; i < QuizStatus.TotalQuestions; i++)
+            {
+                List<bool> correctAnswers = new();
+                foreach (Answer answer in QuizStatus.Quiz.Questions[i].Answers)
+                {
+                    correctAnswers.Add(answer.IsCorrect);
+                }
+
+                List<bool> selectedAnswers = QuizStatus.ConfirmedAnswers[i];
+                if (selectedAnswers is null)
+                    selectedAnswers = Enumerable.Repeat(false, correctAnswers.Count).ToList();
+
+                bool questionCorrect = true;
+                retrospective.ConfirmedAnswers[i] = selectedAnswers;
+                for (int j = 0; j < selectedAnswers.Count; j++)
+                {
+                    
+                    if (selectedAnswers[j] == correctAnswers[j])
+                    {
+                        retrospective.ConfirmedAnswers[i][j] = true;
+                    }
+                    else questionCorrect = false;
+
+                }
+                retrospective.Questions[i].IsAnswered = questionCorrect;
+                
+            }
+            return retrospective;
         }
 
         #endregion

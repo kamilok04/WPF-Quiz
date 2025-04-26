@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Rozwiazywarka.View"
              xmlns:viewmodel="clr-namespace:Rozwiazywarka.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="768" d:DesignWidth="1024">
  
 
     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">

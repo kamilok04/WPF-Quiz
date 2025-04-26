@@ -14,6 +14,7 @@ namespace Rozwiazywarka.ViewModel
         #region Fields
         private QuizStatus _quizStatus;
         private bool _quizInProgress = false;
+        private readonly bool _enableAnswering = true;
         
         private ICommand? _selectAnswer;
         private ICommand? _selectQuestion;
@@ -44,7 +45,18 @@ namespace Rozwiazywarka.ViewModel
             CurrentQuestionIndex = 0;
         }
 
-        
+        public AnswerViewModel(QuizStatus status)
+        {
+            // używane do podsumowania
+         
+            EnableAnswering = false;
+            QuizStatus = status;
+            PropertyChanged += AnswerViewModel_PropertyChanged;
+            CurrentQuestionIndex = 0;
+
+
+        }
+
         #endregion
         #region Properties / Commands
         public QuizStatus QuizStatus
@@ -67,6 +79,11 @@ namespace Rozwiazywarka.ViewModel
         public int CurrentQuestionIndexFormatted
         {
             get { return _currentQuestionIndex + 1; }
+        }
+        public bool EnableAnswering
+        {
+            get { return _enableAnswering; }
+            init { _enableAnswering = value; }
         }
 
         public QuestionSelection CurrentQuestion
@@ -111,8 +128,7 @@ namespace Rozwiazywarka.ViewModel
                 if (_selectQuestion == null)
                 {
                     _selectQuestion = new RelayCommand(
-                        param => OnSelectQuestion(param),
-                        param => QuizInProgress
+                        param => OnSelectQuestion(param)
                         );
                 }
                 return _selectQuestion;
@@ -342,7 +358,7 @@ namespace Rozwiazywarka.ViewModel
                 return "";
             var itemIndex = questions.IndexOf((QuestionSelection)values[0]);
 
-            return itemIndex;
+            return itemIndex + 1;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
