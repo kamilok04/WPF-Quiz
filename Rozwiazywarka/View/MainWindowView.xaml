@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Rozwiazywarka.View"
         xmlns:viewmodels="clr-namespace:Rozwiazywarka.ViewModel"
- 
+        
         mc:Ignorable="d"
         Title="Rozwiązywarka" Height="768" Width="1024">
     <Window.Resources>

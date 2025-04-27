@@ -39,16 +39,16 @@ namespace Rozwiazywarka.Model
 
         public Quiz.Model.Quiz Quiz
         {
-            get { return _quiz; }
+            get { return _quiz ?? new(); }
             init { _quiz = value; }
         }
-        public string Name { get { return _name; } init { _name = value; } }
+        public string Name { get { return _name ?? ""; } init { _name = value; } }
         public int TotalQuestions { get { return _totalQuestions; } init { _totalQuestions = value; } }
 
 
         public ObservableCollection<QuestionSelection> Questions
         {
-            get { return _questions; }
+            get { return _questions ??= []; }
             init { _questions =  value; }
         }
         public int MaxScore

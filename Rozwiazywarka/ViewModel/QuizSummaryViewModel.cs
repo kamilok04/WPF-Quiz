@@ -103,15 +103,12 @@ namespace Rozwiazywarka.ViewModel
                 selectedAnswers ??= [.. Enumerable.Repeat(false, correctAnswers.Count)];
 
                 bool questionCorrect = true;
-                retrospective.ConfirmedAnswers[i] = selectedAnswers;
+                retrospective.ConfirmedAnswers[i] = [..Enumerable.Repeat(false, correctAnswers.Count)];
                 for (int j = 0; j < selectedAnswers.Count; j++)
                 {
-                    
-                    if (selectedAnswers[j] == correctAnswers[j])
-                    {
-                        retrospective.ConfirmedAnswers[i][j] = true;
-                    }
-                    else questionCorrect = false;
+                    retrospective.ConfirmedAnswers[i][j] = selectedAnswers[j] == correctAnswers[j];
+
+                    questionCorrect = correctAnswers.SequenceEqual(selectedAnswers);
 
                 }
                 retrospective.Questions[i].IsAnswered = questionCorrect;

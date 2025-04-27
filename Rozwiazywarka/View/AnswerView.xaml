@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:Rozwiazywarka.View"    
              xmlns:viewmodel="clr-namespace:Rozwiazywarka.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="768" d:DesignWidth="1024">
+             d:DesignHeight="768" d:DesignWidth="1024"
+             >
     <UserControl.Resources>
 
         <viewmodel:AnswerStyleConverter x:Key="AnswerStyleConverter"/>
@@ -71,7 +72,8 @@
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Value="False">
-                            <Condition.Binding>
+               
+                           <Condition.Binding>
                                 <PriorityBinding>
                                     <Binding Path="IsSelected"/>
                                     <Binding Path="IsAnswered"/>
@@ -149,8 +151,8 @@
                 </Grid.RowDefinitions>
 
 
-                <Button Content="Wyjście" Command="{Binding StopQuiz}" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}"/>
-                <Label Grid.Row="1" Content="Wybór pytania"/>
+                <Button FontSize="18" FontWeight="Bold" FontFamily="Comic Sans MS" Content="Wyjście" Command="{Binding StopQuiz}" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}"/>
+                <Label FontSize ="18" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="1" Content="Wybór pytania"/>
                 <UniformGrid x:Name="SelectionGrid" Grid.Row="2">
                     <ItemsControl ItemsSource="{Binding QuizStatus.Questions}">
                         <ItemsControl.ItemsPanel>
@@ -166,10 +168,14 @@
                                         
                                         Style="{StaticResource AnswerStyle}">
                                     <Button.Content>
-                                        <MultiBinding Converter="{StaticResource IndexConverter}">
-                                            <Binding/>
-                                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
-                                        </MultiBinding>
+                                        <Label HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                                            <Label.Content>
+                                                <MultiBinding Converter="{StaticResource IndexConverter}">
+                                                    <Binding/>
+                                                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="ItemsSource"/>
+                                                </MultiBinding>
+                                            </Label.Content>
+                                        </Label>
                                     </Button.Content>
                                 </Button>
                             </DataTemplate>
@@ -191,8 +197,8 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"/>
-                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="7*"/>
+                        <RowDefinition Height="6*"/>
                         <RowDefinition Height="1*"/>
 
                     </Grid.RowDefinitions>
@@ -218,6 +224,7 @@
                                                     <ColumnDefinition Width="1*"/>
                                                     <ColumnDefinition Width="10*"/>
                                                 </Grid.ColumnDefinitions>
+                                                
                                               
                                                 <Label x:Name="AnswerKey">
                                                     <MultiBinding Converter="{StaticResource AnswerConverter}">
@@ -225,6 +232,7 @@
                                                         <Binding ElementName="AnswerList" Path="ItemsSource"/>
                                                     </MultiBinding>
                                                 </Label>
+                                                
                                                 <Label Grid.Column="1" Content="{Binding Answer.Text}"/>
                                             </Grid>
                                        
@@ -235,9 +243,9 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Button Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="1"  Content="Zapisz i dalej &gt;"/>
-                    <Button Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}" Grid.Column="1" Grid.Row="2" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="0" Content="Zapisz;"/>
-                    <TextBlock Grid.Row="3" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}">
+                    <Button FontSize="18" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="1"  Content="Zapisz i dalej &gt;"/>
+                    <Button FontSize="18" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}" Grid.Column="1" Grid.Row="2" Grid.RowSpan="1"  Command="{Binding ConfirmAnswer}" CommandParameter="0" Content="Zapisz"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18" Grid.Row="3" Visibility="{Binding EnableAnswering, Converter={StaticResource BoolToVisibility}, FallbackValue=Visible}">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}Pytanie {0} z {1}">
                                 <Binding Path="CurrentQuestionIndexFormatted" FallbackValue="0"></Binding>

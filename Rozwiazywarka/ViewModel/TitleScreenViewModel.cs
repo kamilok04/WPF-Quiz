@@ -1,12 +1,15 @@
 ﻿using Quiz.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Rozwiazywarka.ViewModel
@@ -15,10 +18,12 @@ namespace Rozwiazywarka.ViewModel
     {
         #region Fields
 
-        private FileModel _currentFile = new("","Pliki (*.json)|*.json");
+        private FileModel _currentFile = new("", "Wszystkie pliki (*.*)|*.*"); // new("","Pliki (*.json)|*.json");
+        private string _encryptionKey;
         private ICommand? _setQuizFile;
         private ICommand? _loadQuizCommand;
-        private ICommand? _pasteEncrytionKeyCommand;
+        private string _errorString;
+        private ICommand? _pasteEncryptionKeyCommand;
         private Quiz.Model.Quiz? _loadedQuiz;
      
 
@@ -46,6 +51,7 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
+     
        
         public Quiz.Model.Quiz LoadedQuiz
         {
@@ -80,10 +86,10 @@ namespace Rozwiazywarka.ViewModel
         {
             get
             {
-                _pasteEncrytionKeyCommand ??= new RelayCommand(
+                _pasteEncryptionKeyCommand ??= new RelayCommand(
                     param => PasteEncryptionKey()
                     );
-                return _pasteEncrytionKeyCommand;
+                return _pasteEncryptionKeyCommand;
             }
 
             
@@ -105,8 +111,25 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
+        public string EncryptionKey
+        {
+            set
+            {
+                _encryptionKey = value;
+            }
+            get => _encryptionKey;
+        }
 
 
+        public string ErrorString
+        {
+            set
+            {
+                _errorString = value;
+                OnPropertyChanged(nameof(ErrorString));
+            }
+            get => _errorString;
+        }
         #endregion
 
         #region Private Helpers
@@ -130,20 +153,29 @@ namespace Rozwiazywarka.ViewModel
             // Spróbuj wczytać plik quizu
             // TODO: szyfrowanie
             
-            string jsonString = File.ReadAllText(CurrentFile.FilePathString);
+            
+            string encryptedJsonString = File.ReadAllText(CurrentFile.FilePathString);
+            string decryptedJsonString = "";
+            try { decryptedJsonString = IAESHelper.Decrypt(encryptedJsonString, EncryptionKey); }
+            catch(Exception e) { QuizLoadingError(e.Message);  return; }
+            
 
-            Quiz.Model.Quiz? quiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
+            Quiz.Model.Quiz? quiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(decryptedJsonString);
             if (quiz != null)
             {
                 LoadedQuiz = quiz;
-                
+
             }
+            else QuizLoadingError();
         }
 
-        private void PasteEncryptionKey()
+        private void QuizLoadingError(string extraInfo = "")
         {
-            // TODO
+            ErrorString = "Błąd ładowania quizu! Dodatkowe dane: " + extraInfo;
         }
+
+        private void PasteEncryptionKey() => EncryptionKey = Clipboard.GetText();
+        
 
         #endregion
     }
