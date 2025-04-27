@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Quiz.Model
 {
-    public class AESHelper
+    public interface IAESHelper
     {
         private static readonly Encoding encoding = Encoding.UTF8;
 

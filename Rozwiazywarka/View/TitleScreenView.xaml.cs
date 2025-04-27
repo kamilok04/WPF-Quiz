@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,5 +33,18 @@ namespace Rozwiazywarka.View
             InitializeComponent();
         }
 
+        // Widok nadal nie wie niczego o modelu
+        // MVVM jest całe :)
+        public SecureString password { set; get; }
+        private void PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is not PasswordBox pb) return;
+            if (DataContext != null)
+            {
+                ((dynamic)DataContext).EncryptionKey = pb.Password;
+            }
+        }
     }
+
+    
 }
