@@ -13,10 +13,10 @@ namespace Rozwiazywarka.Model
         private readonly int _index;
         private bool _isAnswered = false;
 
-        public QuestionSelection() { }
+        public QuestionSelection() { _question = new(); }
         public QuestionSelection(Question question, int index)
         {
-            Question = question;
+            _question = question;
             Index = index;
         }
 

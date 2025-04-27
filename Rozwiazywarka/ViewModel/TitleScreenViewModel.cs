@@ -156,7 +156,7 @@ namespace Rozwiazywarka.ViewModel
             
             string encryptedJsonString = File.ReadAllText(CurrentFile.FilePathString);
             string decryptedJsonString = "";
-            try { decryptedJsonString = AESHelper.Decrypt(encryptedJsonString, EncryptionKey); }
+            try { decryptedJsonString = IAESHelper.Decrypt(encryptedJsonString, EncryptionKey); }
             catch(Exception e) { QuizLoadingError(e.Message);  return; }
             
 

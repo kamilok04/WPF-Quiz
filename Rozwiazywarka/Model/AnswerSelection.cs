@@ -22,7 +22,7 @@ namespace Rozwiazywarka.Model
     
         
 
-        public AnswerSelection() { _isSelected = false; }
+        public AnswerSelection() { _answer = new(); _isSelected = false; }
 
 
         public Answer Answer
