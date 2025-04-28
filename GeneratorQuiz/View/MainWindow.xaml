@@ -17,11 +17,11 @@
     
         <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40px"/>
+            <RowDefinition Height="50px"/>
             <RowDefinition Height="50px"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Generator Quizu" FontSize="25" TextAlignment="Center" Background="Black" Foreground="White" FontWeight="DemiBold"/>
+        <TextBlock Text="Generator Quizu" FontSize="25" TextAlignment="Center" Background="Black" Foreground="White" FontWeight="DemiBold" Padding=" 0 8"/>
         <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0 0 0 1px">
             <Grid >
                 <Grid.ColumnDefinitions>
