@@ -20,18 +20,18 @@
             <Label >Wybrany plik:</Label>
             <Label Grid.Column="1" Name="FileName" Content="{Binding CurrentFile.FilePathString}"></Label>
         </Grid>
-        <Grid DockPanel.Dock="Top" viewmodel:Gap.Margin="4">
+        <!--<Grid DockPanel.Dock="Top" viewmodel:Gap.Margin="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             
-               
+           
             <Label>Klucz dostępu: </Label>
             <PasswordBox Grid.Column="1"  Name="AESKey" PasswordChanged="PasswordChanged" ></PasswordBox>
             <Button Grid.Column="2">Wklej</Button>
-        </Grid>
+        </Grid>-->
         <UniformGrid Height="40" DockPanel.Dock="Top" Columns="2" Rows="1" Margin="0 10 0 0" viewmodel:Gap.Margin="4">
             <Button Command="{Binding SetQuizFileCommand}">Wybierz plik...</Button>
             <Button Command="{Binding LoadQuizCommand}">Start</Button>

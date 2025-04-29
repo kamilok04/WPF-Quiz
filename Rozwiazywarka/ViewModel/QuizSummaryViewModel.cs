@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Rozwiazywarka.ViewModel
@@ -16,7 +17,9 @@ namespace Rozwiazywarka.ViewModel
         private readonly QuizStatus _status;
         private readonly string _timeElapsedFormatted;
         private readonly int _score;
+        private bool _readyToReturn = false;
         private readonly AnswerViewModel _answerViewModel;
+        private ICommand _returnToTitleCommand;
 
         #endregion
 
@@ -29,15 +32,6 @@ namespace Rozwiazywarka.ViewModel
             TimeElapsedFormatted = TimeSpan.FromSeconds(QuizStatus.TotalTimeElapsed).ToString(@"hh\:mm\:ss");
             QuizStatus retrospective = CreateRetrospective();
             AnswerViewModel = new(retrospective);
-
-
-            /* TODO:
-             * - pozbyć się zegara
-             * - uniemożliwić zmianę odpowiedzi
-             * - użyć selected/unselected jako correct/incorrect
-             * - pozbyć się przycisków zapisz/zapisz + dalej
-             * - pozbyć się overlaya
-             */
         }
         #endregion
 
@@ -49,6 +43,11 @@ namespace Rozwiazywarka.ViewModel
             init => _status = value;
 
      
+        }
+        public bool ReadyToReturn
+        {
+            get => _readyToReturn;
+            set => _readyToReturn = value;
         }
         public int Score
         {
@@ -66,6 +65,20 @@ namespace Rozwiazywarka.ViewModel
             get => _answerViewModel;
             init => _answerViewModel = value;
 
+        }
+
+        public ICommand ReturnToTitleCommand
+        {
+            get
+            {
+                if (_returnToTitleCommand == null)
+                {
+                    _returnToTitleCommand = new RelayCommand(
+                        param => { ReadyToReturn = true; OnPropertyChanged(nameof(ReadyToReturn)); }
+                        ); 
+                }
+                return _returnToTitleCommand;
+            }
         }
         #endregion
 
@@ -106,8 +119,11 @@ namespace Rozwiazywarka.ViewModel
                 retrospective.ConfirmedAnswers[i] = [..Enumerable.Repeat(false, correctAnswers.Count)];
                 for (int j = 0; j < selectedAnswers.Count; j++)
                 {
-                    retrospective.ConfirmedAnswers[i][j] = selectedAnswers[j] == correctAnswers[j];
-
+                    if (selectedAnswers[j] == correctAnswers[j])
+                    {
+                        retrospective.ConfirmedAnswers[i][j] = true;
+                      
+                    }
                     questionCorrect = correctAnswers.SequenceEqual(selectedAnswers);
 
                 }
@@ -116,6 +132,8 @@ namespace Rozwiazywarka.ViewModel
             }
             return retrospective;
         }
+
+ 
 
         #endregion
 

@@ -12,6 +12,7 @@ namespace Rozwiazywarka.Model
     {
          private readonly Answer _answer;
         private bool _isSelected = false;
+        private readonly string _commentary = string.Empty;
 
         public AnswerSelection(Answer answer, bool selected = false)
         {
@@ -30,6 +31,15 @@ namespace Rozwiazywarka.Model
             get { return _answer; }
         }
 
+        public string Commentary
+        {
+            get { return _commentary; }
+            init
+            {
+                _commentary = value;
+                OnPropertyChanged("Commentary");
+            }
+        }
         public bool IsSelected
         {
             get { return _isSelected; }

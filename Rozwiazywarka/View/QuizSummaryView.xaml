@@ -19,10 +19,11 @@
             <RowDefinition Height="13*"/>
         </Grid.RowDefinitions>
         <Label FontFamily="Comic Sans MS" FontSize="20" HorizontalAlignment="Center" Content="{Binding QuizStatus.Name, FallbackValue='Tytuł'}" ContentStringFormat='{}QUIZ "{0}"'></Label>
-        <DockPanel Grid.Row="1">
+        <UniformGrid Columns="3" Grid.Row="1">
 
-            <Label DockPanel.Dock="Right" Content="{Binding TimeElapsedFormatted,FallbackValue='00:00:00'}" ContentStringFormat="{}Czas spędzony nad quizem: {0}"/>
-            <TextBlock DockPanel.Dock="Right">
+            <Label FontWeight="Bold" Content="{Binding TimeElapsedFormatted,FallbackValue='00:00:00'}" ContentStringFormat="{}Czas spędzony nad quizem: {0}"/>
+            <TextBlock FontWeight="Bold">
+                
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}Wynik: {0} / {1} możliwych">
                         <Binding Path="Score" FallbackValue="0"></Binding>
@@ -30,9 +31,12 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-        </DockPanel>
+            <Button Command="{Binding ReturnToTitleCommand}">
+                Wróć do menu głównego
+            </Button>
+        </UniformGrid>
         <DockPanel Grid.Row="3">
-            <Label DockPanel.Dock="Top">Przegląd quizu:</Label>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center">Zapoznaj się z odpowiedziami:</Label>
             <Grid DockPanel.Dock="Top" Name="QuizOverview">
                 <ContentPresenter Content="{Binding AnswerViewModel}"/>
             </Grid>

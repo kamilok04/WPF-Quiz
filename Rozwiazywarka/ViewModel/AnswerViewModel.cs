@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Net.WebSockets;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -309,6 +310,7 @@ namespace Rozwiazywarka.ViewModel
         #endregion
     }
 
+    #region Converters
     public class AnswerConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -332,6 +334,7 @@ namespace Rozwiazywarka.ViewModel
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
             => (bool)value == true ? "SelectedAnswer" : "UnselectedAnswer";
         
+        // Nieużywane, ale wymagane do zaimplementowania IValueConverter
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
             => throw new NotImplementedException();
     }
@@ -350,4 +353,31 @@ namespace Rozwiazywarka.ViewModel
             => throw new NotImplementedException("GetIndexMultiConverter_ConvertBack");
         
     }
+
+    public class AnswerCommentaryConverter : IMultiValueConverter
+    {
+
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (values[1] is not bool selected || values[0] is not bool correct) return "";
+            if (selected) return "Dobrze! (wybrałeś: " + (correct ? "prawda" : "fałsz" ) + ")";
+            return "Źle! Wybrano: " + (correct ? "fałsz" : "prawda") + ", powinno być: " + (correct ? "prawda" : "fałsz"); 
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+
+    public class BoolToInvisibility : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        => (bool)value ? "Collapsed" : "Visible";
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    #endregion
 }

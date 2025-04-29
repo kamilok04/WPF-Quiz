@@ -348,7 +348,7 @@ namespace GeneratorQuiz.ViewModel
                             {
                                 string jsonString = JsonSerializer.Serialize(newQuiz, new JsonSerializerOptions { WriteIndented = true });
                                 string key = "bpzqCj9mQ2L6kDWh"; 
-                                string encryptedJson = AESHelper.Encrypt(jsonString, key);
+                                string encryptedJson = IAESHelper.Encrypt(jsonString, key);
                                 File.WriteAllText(saveFileDialog.FileName, encryptedJson);
                                 MessageBox.Show("Quiz zapisany pomyślnie!", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
@@ -384,7 +384,7 @@ namespace GeneratorQuiz.ViewModel
                             {
                                 string encryptedJson = File.ReadAllText(openFileDialog.FileName);
                                 string key = "bpzqCj9mQ2L6kDWh"; 
-                                string jsonString = AESHelper.Decrypt(encryptedJson, key);
+                                string jsonString = IAESHelper.Decrypt(encryptedJson, key);
                                 newQuiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
                                 Name = newQuiz.Name;
                                 OnPropertyChanged(nameof(newQuiz));

@@ -1,7 +1,9 @@
 ﻿using Quiz.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -123,11 +125,23 @@ namespace Rozwiazywarka.ViewModel
                     {
                         // Koniec quizu, zmień na widok podsumowania
                         QuizSummaryViewModel summary = new(answerViewModel.QuizStatus);
+                        summary.PropertyChanged += QuizSummaryViewModel_PropertyChanged;
                         ChangeViewModel(summary);
                     }
                     break;
 
 
+            }
+        }
+
+        private void QuizSummaryViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender == null) return;
+            switch (e.PropertyName) {
+                case (nameof(QuizSummaryViewModel.ReadyToReturn)):
+                    var model = (QuizSummaryViewModel)sender;
+                    if (model.ReadyToReturn == true) ChangeViewModel(PageViewModels[0]);
+                    break;
             }
         }
 

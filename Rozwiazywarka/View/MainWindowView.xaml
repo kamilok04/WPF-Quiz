@@ -21,6 +21,6 @@
             <views:QuizSummaryView />
         </DataTemplate>
     </Window.Resources>
-    <ContentControl Content="{Binding CurrentPageViewModel}"/>
+    <ContentControl Margin="10" Content="{Binding CurrentPageViewModel}"/>
 
 </Window>

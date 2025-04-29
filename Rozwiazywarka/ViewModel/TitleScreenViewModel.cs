@@ -19,11 +19,11 @@ namespace Rozwiazywarka.ViewModel
         #region Fields
 
         private FileModel _currentFile = new("", "Wszystkie pliki (*.*)|*.*"); // new("","Pliki (*.json)|*.json");
-        private string _encryptionKey;
+        private string? _encryptionKey;
         private ICommand? _setQuizFile;
         private ICommand? _loadQuizCommand;
-        private string _errorString;
-        private ICommand? _pasteEncryptionKeyCommand;
+        private string? _errorString;
+        //private ICommand? _pasteEncryptionKeyCommand;
         private Quiz.Model.Quiz? _loadedQuiz;
      
 
@@ -82,20 +82,17 @@ namespace Rozwiazywarka.ViewModel
             }
         }
 
-        public ICommand PasteEncryptionKeyCommand
-        {
-            get
-            {
-                _pasteEncryptionKeyCommand ??= new RelayCommand(
-                    param => PasteEncryptionKey()
-                    );
-                return _pasteEncryptionKeyCommand;
-            }
+        //public ICommand PasteEncryptionKeyCommand
+        //{
+        //    get
+        //    {
+        //        _pasteEncryptionKeyCommand ??= new RelayCommand(
+        //            param => PasteEncryptionKey()
+        //            );
+        //        return _pasteEncryptionKeyCommand;
+        //    }   
+        //}
 
-            
-                   
-            
-        }
         public ICommand LoadQuizCommand
         {
             get
@@ -117,7 +114,8 @@ namespace Rozwiazywarka.ViewModel
             {
                 _encryptionKey = value;
             }
-            get => _encryptionKey;
+            get => _encryptionKey
+                ??=  "bpzqCj9mQ2L6kDWh";
         }
 
 
