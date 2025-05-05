@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="1024"
              xmlns:viewmodels="clr-namespace:Rozwiazywarka.ViewModel">
+   
     <!--<UserControl.DataContext>
         <viewmodels:QuizSummaryViewModel/>
     </UserControl.DataContext>-->

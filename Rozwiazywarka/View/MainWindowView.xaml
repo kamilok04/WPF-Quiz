@@ -7,7 +7,8 @@
         xmlns:viewmodels="clr-namespace:Rozwiazywarka.ViewModel"
         
         mc:Ignorable="d"
-        Title="Rozwiązywarka" Height="768" Width="1024">
+        Title="Rozwiązywarka" Height="768" Width="1024"
+        Icon="/Resources/thumb.png">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:TitleScreenViewModel}">
             <views:TitleScreenView />

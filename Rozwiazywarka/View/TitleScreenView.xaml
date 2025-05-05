@@ -11,7 +11,7 @@
 
     <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <Label Margin="40 0 40 0" DockPanel.Dock="Top" FontFamily="Comic Sans MS" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="48">Rozwiązywarka do Quizu</Label>
-        <Label DockPanel.Dock="Top" HorizontalAlignment="Center" Foreground="Red"  Name="ErrorLabel" Content="{Binding ErrorString,FallbackValue=''}"/>
+        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Foreground="Red"  Name="ErrorLabel" Text="{Binding ErrorString,FallbackValue=''}"/>
         <Grid DockPanel.Dock="Top" viewmodel:Gap.Margin="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

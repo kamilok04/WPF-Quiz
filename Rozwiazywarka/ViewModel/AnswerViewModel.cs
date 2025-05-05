@@ -190,6 +190,7 @@ namespace Rozwiazywarka.ViewModel
         {
             
             QuizInProgress = true;
+            CurrentQuestion.IsCurrent = true;
             timer.Start();
          
         }
@@ -217,7 +218,12 @@ namespace Rozwiazywarka.ViewModel
             }
             ProcessAnswers(CurrentQuestionIndex);
             if (CurrentQuestionIndex + offset >= QuizStatus.TotalQuestions) OnStopQuiz();
-            else CurrentQuestionIndex += offset;
+            else
+            {
+                CurrentQuestion.IsCurrent = false;
+                CurrentQuestionIndex += offset;
+                CurrentQuestion.IsCurrent = true;
+            }
         }
 
         private void OnStopQuiz() {
@@ -266,7 +272,9 @@ namespace Rozwiazywarka.ViewModel
             // if (param is not QuestionSelection question) return;
             if (param is not int newIndex) return;
             ProcessAnswers(CurrentQuestionIndex);
+            CurrentQuestion.IsCurrent = false;
             CurrentQuestionIndex = newIndex;
+            CurrentQuestion.IsCurrent = true;
         }
 
         private void ProcessAnswers(int index)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Rozwiazywarka.Model
         private readonly Question _question;
         private readonly int _index;
         private bool _isAnswered = false;
+        private bool _isCurrent = false;
 
         public QuestionSelection() { _question = new(); }
         public QuestionSelection(Question question, int index)
@@ -34,6 +36,16 @@ namespace Rozwiazywarka.Model
             {
                 _isAnswered = value;
                 OnPropertyChanged(nameof(IsAnswered));
+            }
+
+        }
+        public bool IsCurrent
+        {
+            get => _isCurrent;
+            set
+            {
+                _isCurrent = value;
+                OnPropertyChanged(nameof(IsCurrent));
             }
 
         }

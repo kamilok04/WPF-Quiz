@@ -169,7 +169,7 @@ namespace Rozwiazywarka.ViewModel
 
         private void QuizLoadingError(string extraInfo = "")
         {
-            ErrorString = "Błąd ładowania quizu! Dodatkowe dane: " + extraInfo;
+            ErrorString = "Błąd ładowania quizu!";
         }
 
         private void PasteEncryptionKey() => EncryptionKey = Clipboard.GetText();

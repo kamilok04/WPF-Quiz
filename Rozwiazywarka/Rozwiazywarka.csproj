@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\thumb.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="UnitTests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\thumb.png" />
   </ItemGroup>
 
   <Import Project="..\QuizModel\QuizModel.projitems" Label="Shared" />
