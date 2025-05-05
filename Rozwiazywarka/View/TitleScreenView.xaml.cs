@@ -33,17 +33,17 @@ namespace Rozwiazywarka.View
             InitializeComponent();
         }
 
-        // Widok nadal nie wie niczego o modelu
-        // MVVM jest całe :)
-        public SecureString password { set; get; }
-        private void PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (sender is not PasswordBox pb) return;
-            if (DataContext != null)
-            {
-                ((dynamic)DataContext).EncryptionKey = pb.Password;
-            }
-        }
+        //// Widok nadal nie wie niczego o modelu
+        //// MVVM jest całe :)
+        //public SecureString password { set; get; }
+        //private void PasswordChanged(object sender, RoutedEventArgs e)
+        //{
+        //    if (sender is not PasswordBox pb) return;
+        //    if (DataContext != null)
+        //    {
+        //        ((dynamic)DataContext).EncryptionKey = pb.Password;
+        //    }
+        //}
     }
 
     
