@@ -18,6 +18,7 @@ namespace GeneratorQuiz.ViewModel
     {
         public Quiz.Model.Quiz newQuiz { get; set; } = new Quiz.Model.Quiz();
 
+        #region Fields
 
         private bool _isVisible = false; 
         public bool IsVisible
@@ -203,6 +204,9 @@ namespace GeneratorQuiz.ViewModel
                 }
             }
         }
+#endregion
+
+        #region Button_Methods
 
         private ICommand? _createNewQuiz;
         public ICommand CreateNewQuiz
@@ -293,8 +297,8 @@ namespace GeneratorQuiz.ViewModel
                             newQuiz.Questions.Remove(SelectedQuestion);
 
                         },
-                        p => (!String.IsNullOrEmpty(Question) && !String.IsNullOrEmpty(Answer1) && !String.IsNullOrEmpty(Answer2) &&
-                        !String.IsNullOrEmpty(Answer3) && !String.IsNullOrEmpty(Answer4) && (A1IsTrue || A2IsTrue || A3IsTrue || A4IsTrue) && (SelectedQuestion is not null)
+                        p => ((!String.IsNullOrEmpty(Question) || !String.IsNullOrEmpty(Answer1) || !String.IsNullOrEmpty(Answer2) ||
+                        !String.IsNullOrEmpty(Answer3) || !String.IsNullOrEmpty(Answer4) || A1IsTrue || A2IsTrue || A3IsTrue || A4IsTrue) && (SelectedQuestion is not null)
                         && newQuiz.Questions.IndexOf(SelectedQuestion) >= 0)
                         );
                 }
@@ -383,12 +387,35 @@ namespace GeneratorQuiz.ViewModel
                     _loadQuiz = new RelayCommand(
                         p =>
                         {
-                            if (IsVisible == true && (!String.IsNullOrEmpty(Name) || !String.IsNullOrEmpty(Question) || !String.IsNullOrEmpty(Answer1) || !String.IsNullOrEmpty(Answer2) ||
-                            !String.IsNullOrEmpty(Answer3) || !String.IsNullOrEmpty(Answer4) || A1IsTrue || A2IsTrue || A3IsTrue || A4IsTrue || newQuiz.Questions.Count >= 1))
+                            try
                             {
-                                MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz wczytać inny quiz? \n Niezapisane dane zostaną utracone", "Wczytywanie quizu", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                                if (IsVisible == true && (!String.IsNullOrEmpty(Name) || !String.IsNullOrEmpty(Question) || !String.IsNullOrEmpty(Answer1) || !String.IsNullOrEmpty(Answer2) ||
+                                !String.IsNullOrEmpty(Answer3) || !String.IsNullOrEmpty(Answer4) || A1IsTrue || A2IsTrue || A3IsTrue || A4IsTrue || newQuiz.Questions.Count >= 1))
+                                {
+                                    MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz wczytać inny quiz? \n Niezapisane dane zostaną utracone", "Wczytywanie quizu", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                                if (result == MessageBoxResult.Yes)
+                                    if (result == MessageBoxResult.Yes)
+                                    {
+                                        OpenFileDialog openFileDialog = new OpenFileDialog
+                                        {
+                                            Filter = "All files (*.*)|*.*",
+                                            Title = "Wczyatj quiz"
+                                        };
+
+                                        if (openFileDialog.ShowDialog() == true)
+                                        {
+                                            string encryptedJson = File.ReadAllText(openFileDialog.FileName);
+                                            string key = "bpzqCj9mQ2L6kDWh";
+                                            string jsonString = IAESHelper.Decrypt(encryptedJson, key);
+                                            newQuiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
+                                            Name = newQuiz.Name;
+                                            OnPropertyChanged(nameof(newQuiz));
+                                            IsVisible = true;
+
+                                        }
+                                    }
+                                }
+                                else
                                 {
                                     OpenFileDialog openFileDialog = new OpenFileDialog
                                     {
@@ -405,28 +432,11 @@ namespace GeneratorQuiz.ViewModel
                                         Name = newQuiz.Name;
                                         OnPropertyChanged(nameof(newQuiz));
                                         IsVisible = true;
-
                                     }
                                 }
-                            }
-                            else
+                            }catch(Exception e)
                             {
-                                OpenFileDialog openFileDialog = new OpenFileDialog
-                                {
-                                    Filter = "All files (*.*)|*.*",
-                                    Title = "Wczyatj quiz"
-                                };
-
-                                if (openFileDialog.ShowDialog() == true)
-                                {
-                                    string encryptedJson = File.ReadAllText(openFileDialog.FileName);
-                                    string key = "bpzqCj9mQ2L6kDWh";
-                                    string jsonString = IAESHelper.Decrypt(encryptedJson, key);
-                                    newQuiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
-                                    Name = newQuiz.Name;
-                                    OnPropertyChanged(nameof(newQuiz));
-                                    IsVisible = true;
-                                }
+                                MessageBox.Show("Wystąpił błąd przy wczytywaniu quizu", "Błąd!", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
 
                         },
@@ -441,3 +451,6 @@ namespace GeneratorQuiz.ViewModel
 
     }
 }
+
+#endregion
+   
