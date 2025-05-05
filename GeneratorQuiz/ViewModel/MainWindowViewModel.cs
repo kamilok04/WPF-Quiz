@@ -200,15 +200,6 @@ namespace GeneratorQuiz.ViewModel
                     A3IsTrue = value.Answers[2].IsCorrect;
                     A4IsTrue = value.Answers[3].IsCorrect;
                     OnPropertyChanged(nameof(SelectedQuestion));
-                    OnPropertyChanged(nameof(Answer1));
-                    OnPropertyChanged(nameof(Answer2));
-                    OnPropertyChanged(nameof(Answer3));
-                    OnPropertyChanged(nameof(Answer4));
-                    OnPropertyChanged(nameof(A1IsTrue));
-                    OnPropertyChanged(nameof(A2IsTrue));
-                    OnPropertyChanged(nameof(A3IsTrue));
-                    OnPropertyChanged(nameof(A4IsTrue));
-                    OnPropertyChanged(nameof(Question));
                 }
             }
         }
@@ -223,10 +214,25 @@ namespace GeneratorQuiz.ViewModel
                     _createNewQuiz = new RelayCommand(
                         p =>
                         {
-                            IsVisible = true;
-                            Question = Answer1 = Answer2 = Answer3 = Answer4 = Name = String.Empty;
-                            A1IsTrue = A2IsTrue = A3IsTrue = A4IsTrue = false;
-                            newQuiz = new Quiz.Model.Quiz();
+                            if(IsVisible == true && (!String.IsNullOrEmpty(Name) || !String.IsNullOrEmpty(Question) || !String.IsNullOrEmpty(Answer1) || !String.IsNullOrEmpty(Answer2) || 
+                            !String.IsNullOrEmpty(Answer3) || !String.IsNullOrEmpty(Answer4) || A1IsTrue || A2IsTrue || A3IsTrue || A4IsTrue || newQuiz.Questions.Count>=1))
+                            {
+                                MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz utworzyć nowy quiz? \n Niezapisane dane zostaną utracone", "Tworzenie quizu", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    Question = Answer1 = Answer2 = Answer3 = Answer4 = Name = String.Empty;
+                                    A1IsTrue = A2IsTrue = A3IsTrue = A4IsTrue = false;
+                                    newQuiz = new Quiz.Model.Quiz();
+                                } 
+                            }
+                            else
+                            {
+                                IsVisible = true;
+                                Question = Answer1 = Answer2 = Answer3 = Answer4 = Name = String.Empty;
+                                A1IsTrue = A2IsTrue = A3IsTrue = A4IsTrue = false;
+                                newQuiz = new Quiz.Model.Quiz();
+                                
+                            }
                             OnPropertyChanged(nameof(newQuiz));
                         },
                         p => true
@@ -259,6 +265,7 @@ namespace GeneratorQuiz.ViewModel
                             newQuiz.Questions.Add(newQuestion);
                             Question = Answer1 = Answer2 = Answer3 = Answer4 = String.Empty;
                             A1IsTrue = A2IsTrue = A3IsTrue = A4IsTrue = false;
+                            SelectedQuestion = null;
 
                         },
                         p => (!String.IsNullOrEmpty(Question) && !String.IsNullOrEmpty(Answer1) && !String.IsNullOrEmpty(Answer2) && 
@@ -281,6 +288,8 @@ namespace GeneratorQuiz.ViewModel
                     _delQuestion = new RelayCommand(
                         p =>
                         {
+                            Question = Answer1 = Answer2 = Answer3 = Answer4 = String.Empty;
+                            A1IsTrue = A2IsTrue = A3IsTrue = A4IsTrue = false;
                             newQuiz.Questions.Remove(SelectedQuestion);
 
                         },
@@ -374,21 +383,50 @@ namespace GeneratorQuiz.ViewModel
                     _loadQuiz = new RelayCommand(
                         p =>
                         {
-                            OpenFileDialog openFileDialog = new OpenFileDialog
+                            if (IsVisible == true && (!String.IsNullOrEmpty(Name) || !String.IsNullOrEmpty(Question) || !String.IsNullOrEmpty(Answer1) || !String.IsNullOrEmpty(Answer2) ||
+                            !String.IsNullOrEmpty(Answer3) || !String.IsNullOrEmpty(Answer4) || A1IsTrue || A2IsTrue || A3IsTrue || A4IsTrue || newQuiz.Questions.Count >= 1))
                             {
-                                Filter = "All files (*.*)|*.*",
-                                Title = "Wczyatj quiz"
-                            };
+                                MessageBoxResult result = MessageBox.Show("Czy na pewno chcesz wczytać inny quiz? \n Niezapisane dane zostaną utracone", "Wczytywanie quizu", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                            if (openFileDialog.ShowDialog() == true)
+                                if (result == MessageBoxResult.Yes)
+                                {
+                                    OpenFileDialog openFileDialog = new OpenFileDialog
+                                    {
+                                        Filter = "All files (*.*)|*.*",
+                                        Title = "Wczyatj quiz"
+                                    };
+
+                                    if (openFileDialog.ShowDialog() == true)
+                                    {
+                                        string encryptedJson = File.ReadAllText(openFileDialog.FileName);
+                                        string key = "bpzqCj9mQ2L6kDWh";
+                                        string jsonString = IAESHelper.Decrypt(encryptedJson, key);
+                                        newQuiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
+                                        Name = newQuiz.Name;
+                                        OnPropertyChanged(nameof(newQuiz));
+                                        IsVisible = true;
+
+                                    }
+                                }
+                            }
+                            else
                             {
-                                string encryptedJson = File.ReadAllText(openFileDialog.FileName);
-                                string key = "bpzqCj9mQ2L6kDWh"; 
-                                string jsonString = IAESHelper.Decrypt(encryptedJson, key);
-                                newQuiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
-                                Name = newQuiz.Name;
-                                OnPropertyChanged(nameof(newQuiz));
-                                IsVisible = true;
+                                OpenFileDialog openFileDialog = new OpenFileDialog
+                                {
+                                    Filter = "All files (*.*)|*.*",
+                                    Title = "Wczyatj quiz"
+                                };
+
+                                if (openFileDialog.ShowDialog() == true)
+                                {
+                                    string encryptedJson = File.ReadAllText(openFileDialog.FileName);
+                                    string key = "bpzqCj9mQ2L6kDWh";
+                                    string jsonString = IAESHelper.Decrypt(encryptedJson, key);
+                                    newQuiz = JsonSerializer.Deserialize<Quiz.Model.Quiz>(jsonString);
+                                    Name = newQuiz.Name;
+                                    OnPropertyChanged(nameof(newQuiz));
+                                    IsVisible = true;
+                                }
                             }
 
                         },
